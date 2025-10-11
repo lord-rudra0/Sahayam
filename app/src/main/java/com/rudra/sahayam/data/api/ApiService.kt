@@ -11,13 +11,13 @@ interface ApiService {
     suspend fun getAlerts(
         @Query("lat") lat: Double? = null,
         @Query("lon") lon: Double? = null,
-        @Query("radius") radius: Int? = 50
+        @Query("radius") radius: Int = 50
     ): AlertResponse
 
     @GET("api/resources")
     suspend fun getResources(
         @Query("lat") lat: Double? = null,
         @Query("lon") lon: Double? = null,
-        @Query("radius") radius: Int? = 50
+        @Query("radius") radius: Int = 50
     ): ResourceResponse
 }

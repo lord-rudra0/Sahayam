@@ -25,6 +25,7 @@ import com.rudra.sahayam.ui.navigation.Routes
 fun SahayamDashboardScreen(navController: NavController, viewModel: DashboardViewModel = hiltViewModel()) {
     val alerts = viewModel.alertsState
     val resources = viewModel.resourcesState
+    val userAddress = viewModel.userAddress
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
@@ -64,6 +65,7 @@ fun SahayamDashboardScreen(navController: NavController, viewModel: DashboardVie
     ) { innerPadding ->
         DashboardContent(
             modifier = Modifier.padding(innerPadding),
+            userAddress = userAddress,
             alerts = alerts,
             resources = resources,
             onOpenMap = { navController.navigate(Routes.MAP) },

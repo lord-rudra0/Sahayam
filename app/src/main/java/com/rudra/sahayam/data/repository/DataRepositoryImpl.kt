@@ -12,9 +12,9 @@ class DataRepositoryImpl @Inject constructor(
     private val api: ApiService
 ) : DataRepository {
 
-    override fun getAlerts(lat: Double?, lon: Double?): Flow<List<AlertItem>> = flow {
+    override fun getAlerts(lat: Double?, lon: Double?, radius: Int): Flow<List<AlertItem>> = flow {
         try {
-            val response = api.getAlerts(lat, lon)
+            val response = api.getAlerts(lat, lon, radius)
             emit(response.alerts)
         } catch (e: Exception) {
             // In a real app, you'd want to handle this error more gracefully
@@ -23,9 +23,9 @@ class DataRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getResources(lat: Double?, lon: Double?): Flow<List<ResourceItem>> = flow {
+    override fun getResources(lat: Double?, lon: Double?, radius: Int): Flow<List<ResourceItem>> = flow {
         try {
-            val response = api.getResources(lat, lon)
+            val response = api.getResources(lat, lon, radius)
             emit(response.resources)
         } catch (e: Exception) {
             emit(emptyList())

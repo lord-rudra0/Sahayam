@@ -2,6 +2,7 @@ package com.rudra.sahayam.di
 
 import android.app.Application
 import android.content.Context
+import android.location.Geocoder
 import androidx.room.Room
 import com.google.android.gms.location.LocationServices
 import com.rudra.sahayam.BuildConfig
@@ -15,6 +16,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.Locale
 import javax.inject.Singleton
 
 @Module
@@ -43,4 +45,9 @@ object AppModule {
     @Singleton
     fun provideFusedLocationProviderClient(app: Application) = 
         LocationServices.getFusedLocationProviderClient(app)
+
+    @Provides
+    @Singleton
+    fun provideGeocoder(app: Application): Geocoder = 
+        Geocoder(app, Locale.getDefault())
 }

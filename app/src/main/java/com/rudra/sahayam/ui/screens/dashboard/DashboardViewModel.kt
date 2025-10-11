@@ -27,19 +27,22 @@ class DashboardViewModel @Inject constructor(
     var resourcesState by mutableStateOf<List<ResourceItem>>(emptyList())
         private set
 
+    var userAddress by mutableStateOf("Locating...")
+        private set
+
     fun loadData() {
         viewModelScope.launch {
-            val location = locationTracker.getCurrentLocation()
-            val lat = location?.latitude
-            val lon = location?.longitude
+            locationTracker.getCurrentLocation()?.let { location ->
+                userAddress = locationTracker.getAddress(location) ?: "Unknown Location"
 
-            repo.getAlerts(lat, lon).onEach {
-                alertsState = it
-            }.launchIn(viewModelScope)
+                repo.getAlerts(location.latitude, location.longitude, 50).onEach {
+                    alertsState = it
+                }.launchIn(viewModelScope)
 
-            repo.getResources(lat, lon).onEach {
-                resourcesState = it
-            }.launchIn(viewModelScope)
+                repo.getResources(location.latitude, location.longitude, 50).onEach {
+                    resourcesState = it
+                }.launchIn(viewModelScope)
+            }
         }
     }
 }
