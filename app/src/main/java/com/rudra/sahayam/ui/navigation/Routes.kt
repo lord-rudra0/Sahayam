@@ -6,4 +6,5 @@ object Routes {
     const val MAP = "map"
     const val RESOURCES = "resources"
     const val PROFILE = "profile"
+    const val REPORTS = "reports"
 }

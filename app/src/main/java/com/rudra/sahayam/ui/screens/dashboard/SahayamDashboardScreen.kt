@@ -6,14 +6,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Report
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -55,17 +55,19 @@ fun SahayamDashboardScreen(navController: NavController, viewModel: DashboardVie
             SahayamBottomBar(navController = navController, currentRoute = currentRoute)
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /* navController.navigate("reports") */ }) {
-                Icon(Icons.Default.Report, contentDescription = "Report")
-            }
+            ExtendedFloatingActionButton(
+                onClick = { navController.navigate(Routes.REPORTS) },
+                icon = { Icon(Icons.Default.Report, contentDescription = "Report Incident") },
+                text = { Text(text = "Report Incident") }
+            )
         }
     ) { innerPadding ->
         DashboardContent(
-            modifier = Modifier.padding(innerPadding).padding(12.dp),
+            modifier = Modifier.padding(innerPadding),
             alerts = alerts,
             resources = resources,
             onOpenMap = { navController.navigate(Routes.MAP) },
-            onReportClick = { /* navController.navigate("reports") */ }
+            onReportClick = { navController.navigate(Routes.REPORTS) }
         )
     }
 }

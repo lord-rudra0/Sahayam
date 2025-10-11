@@ -9,6 +9,7 @@ import com.rudra.sahayam.ui.screens.alerts.AlertsScreen
 import com.rudra.sahayam.ui.screens.dashboard.SahayamDashboardScreen
 import com.rudra.sahayam.ui.screens.map.MapScreen
 import com.rudra.sahayam.ui.screens.profile.ProfileScreen
+import com.rudra.sahayam.ui.screens.reports.ReportsScreen
 import com.rudra.sahayam.ui.screens.resources.ResourcesScreen
 
 @Composable
@@ -21,5 +22,6 @@ fun NavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
         composable(Routes.MAP) { MapScreen(navController) }
         composable(Routes.RESOURCES) { ResourcesScreen(navController) }
         composable(Routes.PROFILE) { ProfileScreen(navController) }
+        composable(Routes.REPORTS) { ReportsScreen(navController) }
     }
 }

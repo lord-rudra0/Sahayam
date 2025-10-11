@@ -1,6 +1,16 @@
 package com.rudra.sahayam.ui.screens.dashboard
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apartment
@@ -21,14 +31,21 @@ import com.rudra.sahayam.domain.model.ResourceItem
 import com.rudra.sahayam.ui.theme.AccentOrange
 import com.rudra.sahayam.ui.theme.HighSeverity
 import com.rudra.sahayam.ui.theme.LowSeverity
+import com.rudra.sahayam.ui.theme.PrimaryBlue
 import com.rudra.sahayam.ui.theme.TextSecondary
 
 @Composable
 fun ResourceCard(item: ResourceItem) {
-    val icon = when (item.type.lowercase()) {
+    val resourceColor = when (item.type.lowercase()) {
+        "medical" -> HighSeverity
+        "water" -> PrimaryBlue
+        else -> AccentOrange // For shelters, etc.
+    }
+
+    val resourceIcon = when (item.type.lowercase()) {
         "medical" -> Icons.Default.LocalHospital
         "water" -> Icons.Default.WaterDrop
-        else -> Icons.Default.Apartment // For shelters, etc.
+        else -> Icons.Default.Apartment
     }
 
     Card(
@@ -38,42 +55,48 @@ fun ResourceCard(item: ResourceItem) {
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = item.type,
-                tint = AccentOrange,
-                modifier = Modifier.size(40.dp)
+            // Resource Type Bar
+            Box(
+                modifier = Modifier
+                    .width(10.dp)
+                    .fillMaxHeight()
+                    .background(resourceColor)
             )
 
-            Spacer(modifier = Modifier.width(16.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = resourceIcon,
+                    contentDescription = item.type,
+                    tint = resourceColor,
+                    modifier = Modifier.size(40.dp)
+                )
 
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = item.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "${item.quantity} available",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondary
-                )
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = item.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "${item.quantity} available • ${if (item.available) "Open" else "Closed"}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = TextSecondary,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
             }
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Text(
-                text = if (item.available) "Open" else "Closed",
-                fontWeight = FontWeight.Bold,
-                color = if (item.available) LowSeverity else HighSeverity
-            )
         }
     }
 }
