@@ -2,8 +2,8 @@ package com.rudra.sahayam.di
 
 import android.content.Context
 import androidx.room.Room
-import com.sahayam.app.data.api.ApiService
-import com.sahayam.app.data.db.AppDatabase
+import com.rudra.sahayam.data.api.ApiService
+import com.rudra.sahayam.data.db.AppDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -3,7 +3,7 @@ package com.rudra.sahayam.data.db.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.sahayam.app.data.model.SampleEntity
+import com.rudra.sahayam.data.model.SampleEntity
 
 @Dao
 interface SampleDao {

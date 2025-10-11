@@ -16,6 +16,8 @@ gson = "2.11.0"
 playServicesMaps = "19.2.0"
 playServicesLocation = "21.3.0"
 accompanist = "0.37.3"
+androidx-navigation = "2.7.2"
+
 
 [libraries]
 # Core + Lifecycle
@@ -51,6 +53,9 @@ okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-i
 # Google
 google-map = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 google-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
+
+
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
 
 # Accompanist
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }

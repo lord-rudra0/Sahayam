@@ -87,4 +87,7 @@ dependencies {
     // 🔔 Accompanist (permissions & system UI)
     implementation(libs.accompanist.permissions)
     implementation(libs.accompanist.systemuicontroller)
+
+    implementation(libs.androidx.navigation.compose)
+//    kapt(libs.androidx.hilt.compiler)
 }

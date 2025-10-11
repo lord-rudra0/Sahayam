@@ -4,8 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.sahayam.app.ui.screens.onboarding.OnboardingScreen
-import com.sahayam.app.ui.screens.dashboard.DashboardScreen
+import com.rudra.sahayam.ui.screens.dashboard.DashboardScreen
+import com.rudra.sahayam.ui.screens.onboarding.OnboardingScreen
+
 
 object Routes {
     const val Onboarding = "onboarding"
