@@ -2,6 +2,7 @@ package com.rudra.sahayam.di
 
 import android.content.Context
 import androidx.room.Room
+import com.rudra.sahayam.BuildConfig
 import com.rudra.sahayam.data.api.ApiService
 import com.rudra.sahayam.data.db.AppDatabase
 import dagger.Module
@@ -20,7 +21,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideRetrofit(): Retrofit = Retrofit.Builder()
-        .baseUrl("https://api.sahayam.in/")
+        .baseUrl(BuildConfig.BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .client(OkHttpClient.Builder().build())
         .build()

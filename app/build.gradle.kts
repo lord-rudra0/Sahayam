@@ -28,6 +28,12 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            // Add your deployed URL here
+            buildConfigField("String", "BASE_URL", "\"https://sahayata-backend-4nre.onrender.com\"")
+        }
+        debug {
+            // Add your localhost URL here
+            buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:5000\"")
         }
     }
 
@@ -42,6 +48,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
