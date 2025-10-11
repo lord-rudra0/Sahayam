@@ -1,13 +1,16 @@
 package com.rudra.sahayam.di
 
+import android.app.Application
 import android.content.Context
 import androidx.room.Room
+import com.google.android.gms.location.LocationServices
 import com.rudra.sahayam.BuildConfig
 import com.rudra.sahayam.data.api.ApiService
 import com.rudra.sahayam.data.db.AppDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -33,6 +36,11 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(context: Context): AppDatabase =
+    fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
         Room.databaseBuilder(context, AppDatabase::class.java, "sahayam.db").build()
+
+    @Provides
+    @Singleton
+    fun provideFusedLocationProviderClient(app: Application) = 
+        LocationServices.getFusedLocationProviderClient(app)
 }

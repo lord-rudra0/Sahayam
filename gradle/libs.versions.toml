@@ -4,6 +4,7 @@ kotlin = "2.0.0"
 hilt = "2.51.1"
 # KSP is the modern replacement for kapt
 ksp = "2.0.0-1.0.21"
+hiltNavigationCompose = "1.2.0"
 
 coreKtx = "1.13.1"
 lifecycleRuntimeKtx = "2.8.0"
@@ -60,6 +61,7 @@ okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-i
 # Hilt
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 
 # Google Services
 google-map = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }

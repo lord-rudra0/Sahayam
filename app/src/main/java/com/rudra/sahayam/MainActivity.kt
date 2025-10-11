@@ -3,7 +3,8 @@ package com.rudra.sahayam
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.rudra.sahayam.ui.screens.SahayamDashboardScreen
+import androidx.navigation.compose.rememberNavController
+import com.rudra.sahayam.ui.navigation.NavGraph
 import com.rudra.sahayam.ui.theme.SahayamTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -13,7 +14,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             SahayamTheme {
-                SahayamDashboardScreen()
+                val navController = rememberNavController()
+                NavGraph(navController = navController)
             }
         }
     }

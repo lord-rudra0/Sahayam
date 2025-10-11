@@ -1,7 +1,7 @@
 package com.rudra.sahayam.di
 
-import com.rudra.sahayam.data.repository.DataRepositoryImpl
-import com.rudra.sahayam.domain.repository.DataRepository
+import com.rudra.sahayam.data.location.DefaultLocationTracker
+import com.rudra.sahayam.domain.location.LocationTracker
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -10,9 +10,9 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class RepoModule {
+abstract class LocationModule {
 
     @Binds
     @Singleton
-    abstract fun bindDataRepository(impl: DataRepositoryImpl): DataRepository
+    abstract fun bindLocationTracker(defaultLocationTracker: DefaultLocationTracker): LocationTracker
 }
