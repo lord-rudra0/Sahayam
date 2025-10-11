@@ -54,6 +54,7 @@ fun SahayamDashboardScreen() {
             composable(BottomNavItem.Chat.route) { ChatScreen() }
             composable(BottomNavItem.Map.route) { MapScreen() }
             composable(BottomNavItem.Resources.route) { ResourceScreen() }
+            composable(BottomNavItem.Other.route) { OtherScreen() }
             // These are now handled by the top app bar, but we still need destinations
             composable("alerts") { AlertsScreen() }
             composable("profile") { ProfileScreen() }
