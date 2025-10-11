@@ -1,11 +1,11 @@
-package com.sahayam.app
+package com.rudra.sahayam
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
 import com.rudra.sahayam.ui.navigation.NavGraph
-import com.sahayam.app.ui.theme.SahayamTheme
+import com.rudra.sahayam.ui.theme.SahayamTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

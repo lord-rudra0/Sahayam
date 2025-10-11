@@ -7,7 +7,7 @@ import com.rudra.sahayam.data.db.dao.SampleDao
 
 
 
-@Database(entities = [SampleEntity::class], version = 1)
+@Database(entities = [SampleEntity::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun sampleDao(): SampleDao
 }

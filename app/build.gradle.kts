@@ -2,17 +2,19 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("org.jetbrains.kotlin.kapt")
+    alias(libs.plugins.hilt)
+    // Replace kapt with ksp
+    alias(libs.plugins.ksp)
 }
 
 android {
     namespace = "com.rudra.sahayam"
-    compileSdk = 36
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.rudra.sahayam"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -44,13 +46,13 @@ android {
 }
 
 dependencies {
-    // 🧩 Core + Lifecycle
+    // Core + Lifecycle
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
-    // 🎨 Compose
+    // Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
@@ -59,35 +61,37 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-    // 🧪 Testing
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
 
-    // ⚙️ Coroutines
+    // Coroutines
     implementation(libs.kotlinx.coroutines.android)
 
-    // 💾 Room Database
+    // Room Database
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
-    kapt(libs.androidx.room.compiler)
+    // Use ksp instead of kapt for the Room compiler
+    ksp(libs.androidx.room.compiler)
 
-    // 🌐 Networking
+    // Networking
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
 
-    // 🗺️ Google Maps + Location
+    // Google Maps + Location
     implementation(libs.google.map)
     implementation(libs.google.location)
 
-    // 🔔 Accompanist (permissions & system UI)
-    implementation(libs.accompanist.permissions)
-    implementation(libs.accompanist.systemuicontroller)
-
+    // Navigation
     implementation(libs.androidx.navigation.compose)
-//    kapt(libs.androidx.hilt.compiler)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    // Use ksp instead of kapt for the Hilt compiler
+    ksp(libs.hilt.compiler)
 }
