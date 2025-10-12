@@ -10,6 +10,7 @@ import com.rudra.sahayam.ui.screens.auth.LoginScreen
 import com.rudra.sahayam.ui.screens.auth.SignUpScreen
 import com.rudra.sahayam.ui.screens.auth.SplashScreen
 import com.rudra.sahayam.ui.screens.auth.WelcomeScreen
+import com.rudra.sahayam.ui.screens.chat.ChatScreen
 import com.rudra.sahayam.ui.screens.dashboard.SahayamDashboardScreen
 import com.rudra.sahayam.ui.screens.map.MapScreen
 import com.rudra.sahayam.ui.screens.profile.ProfileScreen
@@ -28,13 +29,14 @@ fun NavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
 
         // Main App Flow
         composable(Routes.HOME) {
-            SahayamDashboardScreen()
+            SahayamDashboardScreen(navController)
         }
         composable(Routes.ALERTS) { AlertsScreen(navController) }
         composable(Routes.MAP) { MapScreen(navController) }
         composable(Routes.RESOURCES) { ResourcesScreen(navController) }
         composable(Routes.PROFILE) { ProfileScreen(navController) }
         composable(Routes.REPORTS) { ReportsScreen(navController) }
+        composable(Routes.CHAT) { ChatScreen() }
         
         // Settings
         composable(Routes.SETTINGS) { SettingsScreen(navController) }

@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
-import com.rudra.sahayam.ui.navigation.NavGraph
+import com.rudra.sahayam.ui.screens.main.MainScreen
 import com.rudra.sahayam.ui.theme.SahayamTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             SahayamTheme {
                 val navController = rememberNavController()
-                NavGraph(navController = navController)
+                MainScreen(navController = navController)
             }
         }
     }

@@ -4,10 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 
 @Composable
-fun SahayamDashboardScreen(viewModel: DashboardViewModel = hiltViewModel()) {
-
+fun SahayamDashboardScreen(
+    navController: NavController,
+    viewModel: DashboardViewModel = hiltViewModel()
+) {
     val userAddress by viewModel.userAddress
     val isGuest by viewModel.isGuest
     val networkStatus by viewModel.networkStatus.collectAsState()
