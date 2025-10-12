@@ -14,11 +14,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.rudra.sahayam.ui.navigation.Routes
+import com.rudra.sahayam.viewmodel.AuthViewModel
 
 @Composable
-fun WelcomeScreen(navController: NavController) {
+fun WelcomeScreen(navController: NavController, viewModel: AuthViewModel = hiltViewModel()) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -36,7 +38,12 @@ fun WelcomeScreen(navController: NavController) {
             Text("Sign Up")
         }
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { navController.navigate(Routes.HOME) }) {
+        Button(onClick = { 
+            viewModel.startGuestSession()
+            navController.navigate(Routes.HOME) {
+                popUpTo(Routes.WELCOME) { inclusive = true }
+            }
+        }) {
             Text("Continue as Guest")
         }
     }
