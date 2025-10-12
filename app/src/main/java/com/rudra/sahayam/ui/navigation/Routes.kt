@@ -7,6 +7,7 @@ object Routes {
     const val MAP = "map"
     const val RESOURCES = "resources"
     const val REPORTS = "reports"
+    const val CHAT = "chat"
 
     // Auth
     const val SPLASH = "splash"

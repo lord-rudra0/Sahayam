@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.kotlin.serialization)
     // Replace kapt with ksp
     alias(libs.plugins.ksp)
 }
@@ -13,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "com.rudra.sahayam"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -88,6 +89,11 @@ dependencies {
     implementation(libs.retrofit.converter.gson)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
+    implementation("com.github.UstadMobile.Meshrabiya:lib-meshrabiya:0.1-snapshot")
+
+    // QR Code Scanning
+    implementation("com.google.zxing:core:3.5.1")
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
 
     // Google Maps + Location
     implementation(libs.google.map)
@@ -101,4 +107,10 @@ dependencies {
     implementation(libs.hilt.android)
     // Use ksp instead of kapt for the Hilt compiler
     ksp(libs.hilt.compiler)
+
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
+
+    // Kotlinx Serialization
+    implementation(libs.kotlinx.serialization.json)
 }

@@ -1,112 +1,111 @@
 package com.rudra.sahayam.ui.screens.dashboard
 
-import androidx.compose.runtime.getValue
+import android.annotation.SuppressLint
+import android.content.Context
+import android.net.wifi.WifiManager
+import android.os.Build
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rudra.sahayam.data.db.ReportDao
-import com.rudra.sahayam.data.db.ReportEntity
-import com.rudra.sahayam.data.local.SessionManager
-import com.rudra.sahayam.domain.location.LocationTracker
-import com.rudra.sahayam.domain.model.AlertItem
-import com.rudra.sahayam.domain.model.ResourceItem
-import com.rudra.sahayam.domain.repository.DataRepository
-import com.rudra.sahayam.util.BluetoothObserver
+import com.google.android.gms.location.LocationServices
+import com.rudra.sahayam.di.MeshrabiyaManager
 import com.rudra.sahayam.util.ConnectivityObserver
-import com.rudra.sahayam.util.LocationObserver
+import com.ustadmobile.meshrabiya.vnet.LocalNodeState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val repo: DataRepository,
-    private val locationTracker: LocationTracker,
-    private val connectivityObserver: ConnectivityObserver,
-    private val bluetoothObserver: BluetoothObserver,
-    private val locationObserver: LocationObserver,
-    private val reportDao: ReportDao,
-    private val sessionManager: SessionManager
+    @ApplicationContext private val context: Context,
+    private val connectivityObserver: ConnectivityObserver
 ) : ViewModel() {
 
-    var alertsState by mutableStateOf<List<AlertItem>>(emptyList())
-        private set
+    private val virtualNode = MeshrabiyaManager.virtualNode
 
-    var resourcesState by mutableStateOf<List<ResourceItem>>(emptyList())
-        private set
-
-    var userAddress by mutableStateOf("Locating...")
-        private set
-
-    var networkStatus by mutableStateOf(
-        ConnectivityObserver.NetworkStatus(
-            ConnectivityObserver.Status.Unavailable,
-            ConnectivityObserver.ConnectionType.None
+    val meshrabiyaState = virtualNode.state
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = LocalNodeState()
         )
-    )
-        private set
 
-    var isBluetoothEnabled by mutableStateOf(false)
-        private set
+    private val _userAddress = mutableStateOf("Getting your location...")
+    val userAddress: State<String> = _userAddress
 
-    val isGuest: Boolean
-        get() = sessionManager.isGuest()
+    private val _isGuest = mutableStateOf(false)
+    val isGuest: State<Boolean> = _isGuest
 
-    private var isLocationEnabled by mutableStateOf(false) // Private, used for triggering refresh
+    val alerts = emptyList<com.rudra.sahayam.domain.model.AlertItem>()
+
+    val resources = emptyList<com.rudra.sahayam.domain.model.ResourceItem>()
+
+    val networkStatus = connectivityObserver.observe()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 
+            ConnectivityObserver.NetworkStatus(ConnectivityObserver.Status.Unavailable, ConnectivityObserver.ConnectionType.None))
+
+    val isBluetoothEnabled = mutableStateOf(false)
 
     init {
-        connectivityObserver.observe().onEach {
-            networkStatus = it
-        }.launchIn(viewModelScope)
-
-        bluetoothObserver.observe().onEach {
-            isBluetoothEnabled = it
-        }.launchIn(viewModelScope)
-
-        locationObserver.observe().distinctUntilChanged().onEach {
-            val wasLocationDisabled = !isLocationEnabled
-            isLocationEnabled = it
-            if (wasLocationDisabled && it) {
-                loadData()
-            }
-        }.launchIn(viewModelScope)
+//        getCurrentLocation()
+//        bleClient.startServer()
     }
 
-    fun loadData() {
+    private fun getCurrentLocation() {
         viewModelScope.launch {
-            val location = locationTracker.getCurrentLocation()
-            if (location != null) {
-                userAddress = locationTracker.getAddress(location) ?: "Unknown Location"
-                repo.getAlerts(location.latitude, location.longitude).onEach {
-                    alertsState = it
-                }.launchIn(viewModelScope)
-                repo.getResources(location.latitude, location.longitude).onEach {
-                    resourcesState = it
-                }.launchIn(viewModelScope)
-            } else {
-                userAddress = if(isLocationEnabled) "Could not determine location" else "Location is disabled"
-                repo.getAlerts(null, null).onEach {
-                    alertsState = it
-                }.launchIn(viewModelScope)
-                repo.getResources(null, null).onEach {
-                    resourcesState = it
-                }.launchIn(viewModelScope)
-            }
+//            locationTracker.getCurrentLocation()?.let { location ->
+//                _userAddress.value = "${location.latitude}, ${location.longitude}"
+//            }
         }
     }
 
-    // --- Temporary function for testing guest data sync ---
-    fun createOfflineReport() {
-        viewModelScope.launch {
-            if (sessionManager.isGuest()) {
-                val reportContent = "This is an offline report created at ${System.currentTimeMillis()}"
-                reportDao.insertReport(ReportEntity(content = reportContent))
-                println("Created offline report: $reportContent")
-            }
+    fun onShareLocation() {
+
+    }
+
+    @SuppressLint("MissingPermission")
+    fun onCreateHotspot() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            return
         }
+
+        val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        wifiManager.startLocalOnlyHotspot(object : WifiManager.LocalOnlyHotspotCallback() {
+            override fun onStarted(reservation: WifiManager.LocalOnlyHotspotReservation) {
+                super.onStarted(reservation)
+                val ssid = reservation.wifiConfiguration?.SSID
+                val password = reservation.wifiConfiguration?.preSharedKey
+                //TODO: Share these details with other devices
+            }
+
+            override fun onStopped() {
+                super.onStopped()
+            }
+
+            override fun onFailed(reason: Int) {
+                super.onFailed(reason)
+            }
+        }, null)
+    }
+
+    fun onConnectToHotspot() {
+
+    }
+
+    fun onStartBleDiscovery() {
+        viewModelScope.launch {
+//            val discoveredDevices = bleClient.discoverDevices()
+            //TODO: Do something with the list of devices
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+//        bleClient.stopServer()
     }
 }

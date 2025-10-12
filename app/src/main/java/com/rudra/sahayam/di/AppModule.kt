@@ -11,6 +11,7 @@ import com.rudra.sahayam.data.api.TokenAuthenticator
 import com.rudra.sahayam.data.api.TokenInterceptor
 import com.rudra.sahayam.data.db.AlertDao
 import com.rudra.sahayam.data.db.AppDatabase
+import com.rudra.sahayam.data.db.ChatMessageDao
 import com.rudra.sahayam.data.db.ReportDao
 import com.rudra.sahayam.data.local.SessionManager
 import com.rudra.sahayam.domain.repository.AuthRepository
@@ -59,10 +60,12 @@ object AppModule {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
         }
+
         return OkHttpClient.Builder()
             .addInterceptor(tokenInterceptor)
             .addInterceptor(loggingInterceptor)
             .authenticator(tokenAuthenticator)
+            .socketFactory(MeshrabiyaManager.virtualNode.socketFactory)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
@@ -96,6 +99,10 @@ object AppModule {
     @Provides
     @Singleton
     fun provideReportDao(database: AppDatabase): ReportDao = database.reportDao()
+
+    @Provides
+    @Singleton
+    fun provideChatMessageDao(database: AppDatabase): ChatMessageDao = database.chatMessageDao()
 
     @Provides
     @Singleton

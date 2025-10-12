@@ -16,6 +16,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url = uri("https://devserver3.ustadmobile.com/maven2/") }
     }
 }
 

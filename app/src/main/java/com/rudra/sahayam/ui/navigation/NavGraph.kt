@@ -28,7 +28,7 @@ fun NavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
 
         // Main App Flow
         composable(Routes.HOME) {
-            SahayamDashboardScreen(navController)
+            SahayamDashboardScreen()
         }
         composable(Routes.ALERTS) { AlertsScreen(navController) }
         composable(Routes.MAP) { MapScreen(navController) }
