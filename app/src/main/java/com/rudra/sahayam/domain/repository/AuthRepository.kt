@@ -11,4 +11,5 @@ interface AuthRepository {
     fun signup(request: SignUpRequest): Flow<Result<SignUpResponse>>
     fun startGuestSession()
     fun logout()
+    fun refreshToken(refreshToken: String): Flow<Result<String>>
 }

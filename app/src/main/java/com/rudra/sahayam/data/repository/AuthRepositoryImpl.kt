@@ -2,6 +2,7 @@ package com.rudra.sahayam.data.repository
 
 import com.rudra.sahayam.data.api.ApiService
 import com.rudra.sahayam.data.api.request.LoginRequest
+import com.rudra.sahayam.data.api.request.RefreshTokenRequest
 import com.rudra.sahayam.data.api.request.SignUpRequest
 import com.rudra.sahayam.data.local.SessionManager
 import com.rudra.sahayam.domain.model.LoginResponse
@@ -21,6 +22,7 @@ class AuthRepositoryImpl @Inject constructor(
             val response = apiService.login(request)
             if (response.status == "success") {
                 sessionManager.saveToken(response.token)
+                sessionManager.saveRefreshToken(response.refreshToken)
                 sessionManager.saveUser(response.user)
                 emit(Result.success(response))
             } else {
@@ -36,9 +38,24 @@ class AuthRepositoryImpl @Inject constructor(
             val response = apiService.signup(request)
             if (response.status == "success") {
                 sessionManager.saveToken(response.token)
+                sessionManager.saveRefreshToken(response.refreshToken)
                 emit(Result.success(response))
             } else {
                 emit(Result.failure(Exception(response.message)))
+            }
+        } catch (e: Exception) {
+            emit(Result.failure(e))
+        }
+    }
+
+    override fun refreshToken(refreshToken: String): Flow<Result<String>> = flow {
+        try {
+            val response = apiService.refreshToken(RefreshTokenRequest(refreshToken))
+            if (response.status == "success") {
+                sessionManager.saveToken(response.newToken)
+                emit(Result.success(response.newToken))
+            } else {
+                emit(Result.failure(Exception("Failed to refresh token")))
             }
         } catch (e: Exception) {
             emit(Result.failure(e))
@@ -51,6 +68,5 @@ class AuthRepositoryImpl @Inject constructor(
 
     override fun logout() {
         sessionManager.logout()
-        // Here you might also want to call apiService.logout() if you need to invalidate the token on the server
     }
 }

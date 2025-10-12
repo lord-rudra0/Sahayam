@@ -16,6 +16,7 @@ class SessionManager @Inject constructor(@ApplicationContext context: Context) {
 
     companion object {
         private const val KEY_TOKEN = "token"
+        private const val KEY_REFRESH_TOKEN = "refresh_token"
         private const val KEY_USER_PROFILE = "user_profile"
         private const val KEY_IS_GUEST = "is_guest"
         private const val KEY_GUEST_ID = "guest_id"
@@ -28,6 +29,14 @@ class SessionManager @Inject constructor(@ApplicationContext context: Context) {
 
     fun getToken(): String? {
         return prefs.getString(KEY_TOKEN, null)
+    }
+
+    fun saveRefreshToken(token: String) {
+        prefs.edit().putString(KEY_REFRESH_TOKEN, token).apply()
+    }
+
+    fun getRefreshToken(): String? {
+        return prefs.getString(KEY_REFRESH_TOKEN, null)
     }
 
     fun saveUser(user: User) {

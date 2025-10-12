@@ -6,5 +6,6 @@ data class SignUpResponse(
     val status: String,
     @SerializedName("user_id") val userId: String,
     val message: String,
-    val token: String
+    val token: String,
+    @SerializedName("refresh_token") val refreshToken: String
 )
