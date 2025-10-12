@@ -36,6 +36,7 @@ fun SahayamDashboardScreen(navController: NavController, viewModel: DashboardVie
     val userAddress = viewModel.userAddress
     val networkStatus = viewModel.networkStatus
     val isBluetoothEnabled = viewModel.isBluetoothEnabled
+    val isGuest = viewModel.isGuest
 
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
@@ -94,10 +95,12 @@ fun SahayamDashboardScreen(navController: NavController, viewModel: DashboardVie
             userAddress = userAddress,
             networkStatus = networkStatus,
             isBluetoothEnabled = isBluetoothEnabled,
-            alerts = alerts,
-            resources = resources,
+            isGuest = isGuest,
+            alerts = alerts ?: emptyList(),
+            resources = resources ?: emptyList(),
             onOpenMap = { navController.navigate(Routes.MAP) },
-            onReportClick = { navController.navigate(Routes.REPORTS) }
+            onReportClick = { navController.navigate(Routes.REPORTS) },
+            onCreateOfflineReport = viewModel::createOfflineReport
         )
     }
 }

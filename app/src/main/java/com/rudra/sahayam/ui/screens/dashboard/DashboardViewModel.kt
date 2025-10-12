@@ -5,6 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rudra.sahayam.data.db.ReportDao
+import com.rudra.sahayam.data.db.ReportEntity
+import com.rudra.sahayam.data.local.SessionManager
 import com.rudra.sahayam.domain.location.LocationTracker
 import com.rudra.sahayam.domain.model.AlertItem
 import com.rudra.sahayam.domain.model.ResourceItem
@@ -25,7 +28,9 @@ class DashboardViewModel @Inject constructor(
     private val locationTracker: LocationTracker,
     private val connectivityObserver: ConnectivityObserver,
     private val bluetoothObserver: BluetoothObserver,
-    private val locationObserver: LocationObserver
+    private val locationObserver: LocationObserver,
+    private val reportDao: ReportDao,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     var alertsState by mutableStateOf<List<AlertItem>>(emptyList())
@@ -47,6 +52,9 @@ class DashboardViewModel @Inject constructor(
 
     var isBluetoothEnabled by mutableStateOf(false)
         private set
+
+    val isGuest: Boolean
+        get() = sessionManager.isGuest()
 
     private var isLocationEnabled by mutableStateOf(false) // Private, used for triggering refresh
 
@@ -87,6 +95,17 @@ class DashboardViewModel @Inject constructor(
                 repo.getResources(null, null).onEach {
                     resourcesState = it
                 }.launchIn(viewModelScope)
+            }
+        }
+    }
+
+    // --- Temporary function for testing guest data sync ---
+    fun createOfflineReport() {
+        viewModelScope.launch {
+            if (sessionManager.isGuest()) {
+                val reportContent = "This is an offline report created at ${System.currentTimeMillis()}"
+                reportDao.insertReport(ReportEntity(content = reportContent))
+                println("Created offline report: $reportContent")
             }
         }
     }

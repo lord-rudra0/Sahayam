@@ -36,10 +36,10 @@ interface ApiService {
     // endregion
 
     // region Auth Endpoints
-    @POST("api/auth/signup")
+    @POST("api/users/register")
     suspend fun signup(@Body request: SignUpRequest): SignUpResponse
 
-    @POST("api/auth/login")
+    @POST("api/users/login")
     suspend fun login(@Body request: LoginRequest): LoginResponse
 
     @POST("api/auth/logout")
@@ -50,7 +50,7 @@ interface ApiService {
     // endregion
 
     // region User Endpoints
-    @GET("api/users/profile")
+    @GET("api/users/me")
     suspend fun getProfile(): User
 
     @POST("api/users/update")

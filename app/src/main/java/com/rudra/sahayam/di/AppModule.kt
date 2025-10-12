@@ -9,8 +9,11 @@ import com.rudra.sahayam.BuildConfig
 import com.rudra.sahayam.data.api.ApiService
 import com.rudra.sahayam.data.api.TokenAuthenticator
 import com.rudra.sahayam.data.api.TokenInterceptor
+import com.rudra.sahayam.data.db.AlertDao
 import com.rudra.sahayam.data.db.AppDatabase
+import com.rudra.sahayam.data.db.ReportDao
 import com.rudra.sahayam.data.local.SessionManager
+import com.rudra.sahayam.domain.repository.AuthRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,6 +24,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.Locale
+import java.util.concurrent.TimeUnit
+import javax.inject.Provider
 import javax.inject.Singleton
 
 @Module
@@ -41,7 +46,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideTokenAuthenticator(sessionManager: SessionManager, authRepository: dagger.Lazy<com.rudra.sahayam.domain.repository.AuthRepository>): TokenAuthenticator {
+    fun provideTokenAuthenticator(sessionManager: SessionManager, authRepository: Provider<AuthRepository>): TokenAuthenticator {
         return TokenAuthenticator(sessionManager, authRepository)
     }
 
@@ -58,6 +63,9 @@ object AppModule {
             .addInterceptor(tokenInterceptor)
             .addInterceptor(loggingInterceptor)
             .authenticator(tokenAuthenticator)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
             .build()
     }
 
@@ -77,7 +85,17 @@ object AppModule {
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase = 
-        Room.databaseBuilder(context, AppDatabase::class.java, "sahayam.db").build()
+        Room.databaseBuilder(context, AppDatabase::class.java, "sahayam.db")
+            .fallbackToDestructiveMigration()
+            .build()
+
+    @Provides
+    @Singleton
+    fun provideAlertDao(database: AppDatabase): AlertDao = database.alertDao()
+
+    @Provides
+    @Singleton
+    fun provideReportDao(database: AppDatabase): ReportDao = database.reportDao()
 
     @Provides
     @Singleton

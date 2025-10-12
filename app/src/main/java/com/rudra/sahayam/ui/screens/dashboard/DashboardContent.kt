@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Icon
@@ -39,10 +40,12 @@ fun DashboardContent(
     userAddress: String,
     networkStatus: ConnectivityObserver.NetworkStatus,
     isBluetoothEnabled: Boolean,
+    isGuest: Boolean,
     alerts: List<AlertItem>,
     resources: List<ResourceItem>,
     onOpenMap: () -> Unit = {},
-    onReportClick: () -> Unit = {}
+    onReportClick: () -> Unit = {},
+    onCreateOfflineReport: () -> Unit = {}
 ) {
     LazyColumn(
         modifier = modifier
@@ -117,6 +120,16 @@ fun DashboardContent(
                 enter = fadeIn(animationSpec = tween(500, delayMillis = 200))
             ) {
                 ResourceCard(resource)
+            }
+        }
+        
+        // Temporary Guest Button
+        if (isGuest) {
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(onClick = onCreateOfflineReport) {
+                    Text("Create Offline Report (Guest Mode Test)")
+                }
             }
         }
     }
