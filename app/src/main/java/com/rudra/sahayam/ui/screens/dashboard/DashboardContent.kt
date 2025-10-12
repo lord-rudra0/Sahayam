@@ -5,7 +5,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,12 +13,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import com.rudra.sahayam.domain.model.AlertItem
 import com.rudra.sahayam.domain.model.ResourceItem
 import com.rudra.sahayam.ui.components.SystemStatusRow
-import com.rudra.sahayam.ui.theme.TextSecondary
 import com.rudra.sahayam.util.ConnectivityObserver
 
 @Composable
@@ -55,7 +56,7 @@ fun DashboardContent(
         contentPadding = PaddingValues(vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Header Row
+        // Common header for both guest and logged-in user
         item {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -63,10 +64,7 @@ fun DashboardContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Location Display
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.weight(1f)
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
                     Icon(
                         imageVector = Icons.Default.LocationOn,
                         contentDescription = "Location Icon",
@@ -81,55 +79,128 @@ fun DashboardContent(
                         maxLines = 1
                     )
                 }
-                // System Status
                 SystemStatusRow(networkStatus, isBluetoothEnabled)
             }
         }
 
-        // Alerts Section
-        item {
-            Text(
-                text = "Active Alerts",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        }
-        items(alerts, key = { it.id }) { alert ->
-            AnimatedVisibility(
-                visible = true, // This should be tied to a loading state
-                enter = fadeIn(animationSpec = tween(500))
-            ) {
-                AlertCard(alert)
-            }
+        // Authenticated User Header
+        if (!isGuest) {
+            item { ProfileHeader() }
         }
 
-        // Resources Section
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
+        // Common Components for both users
+        item { WeatherOverview() }
+        
+        // Live Alerts Section
+        item { 
             Text(
-                text = "Nearby Resources",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
+                text = "Live Alerts", 
+                style = MaterialTheme.typography.headlineSmall, 
+                fontWeight = FontWeight.Bold
             )
         }
-        items(resources, key = { it.id }) { resource ->
-            AnimatedVisibility(
-                visible = true, // This should be tied to a loading state
-                enter = fadeIn(animationSpec = tween(500, delayMillis = 200))
-            ) {
-                ResourceCard(resource)
-            }
+        items(alerts, key = { it.id }) {
+            AlertCard(it)
+        }
+
+        // Nearby Shelters Section
+        item { 
+            Text(
+                text = "Nearby Shelters", 
+                style = MaterialTheme.typography.headlineSmall, 
+                fontWeight = FontWeight.Bold
+            )
+        }
+        items(resources, key = { it.id }) {
+            ResourceCard(it)
         }
         
-        // Temporary Guest Button
-        if (isGuest) {
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = onCreateOfflineReport) {
-                    Text("Create Offline Report (Guest Mode Test)")
-                }
+        item { MiniMap(onOpenMap) }
+
+        // Authenticated User Components
+        if (!isGuest) {
+            item { MissionsList() }
+            item { ResourcesSummary() }
+            item { QuickActions(onReportClick) }
+            item { SyncStatusInfo(onCreateOfflineReport) }
+        }
+    }
+}
+
+// Placeholder Composables for the new UI structure
+
+@Composable
+fun ProfileHeader() {
+    Card(modifier = Modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation(2.dp)) {
+        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "Profile", modifier = Modifier.size(40.dp))
+            Spacer(modifier = Modifier.width(16.dp))
+            Column {
+                Text("Welcome Back, Rudra!", style = MaterialTheme.typography.headlineSmall)
+                Text("user | Pune, MH", style = MaterialTheme.typography.bodyMedium)
+            }
+        }
+    }
+}
+
+@Composable
+fun WeatherOverview() {
+    SectionCard(title = "Weather Overview") { 
+        Text("Weather data will be shown here.")
+    }
+}
+
+@Composable
+fun MiniMap(onOpenMap: () -> Unit) {
+    SectionCard(title = "Mini Map") { 
+        Text("A mini-map view will be shown here.")
+        // In a real implementation, this would be a GoogleMap composable
+        Spacer(modifier = Modifier.height(8.dp))
+    }
+}
+
+@Composable
+fun MissionsList() {
+    SectionCard(title = "Your Missions") { 
+        Text("A list of assigned missions will be shown here.")
+    }
+}
+
+@Composable
+fun ResourcesSummary() {
+    SectionCard(title = "Resources Summary") { 
+        Text("Summary of available resources will be displayed here.")
+    }
+}
+
+@Composable
+fun QuickActions(onReportClick: () -> Unit) {
+    SectionCard(title = "Quick Actions") {
+        Text("Buttons for quick actions like 'Report' and 'Request' will be here.")
+    }
+}
+
+@Composable
+fun SyncStatusInfo(onCreateOfflineReport: () -> Unit) {
+    SectionCard(title = "Sync/Offline Info") {
+        Text("Information about offline data and sync status will be here.")
+    }
+}
+
+
+// A generic card for section content
+@Composable
+fun SectionCard(title: String, content: @Composable () -> Unit) {
+    Column {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        Card(modifier = Modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation(2.dp)) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                content()
             }
         }
     }
