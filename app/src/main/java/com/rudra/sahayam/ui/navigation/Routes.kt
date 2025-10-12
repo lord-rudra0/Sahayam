@@ -9,6 +9,7 @@ object Routes {
     const val REPORTS = "reports"
 
     // Auth
+    const val SPLASH = "splash"
     const val WELCOME = "welcome"
     const val LOGIN = "login"
     const val SIGNUP = "signup"

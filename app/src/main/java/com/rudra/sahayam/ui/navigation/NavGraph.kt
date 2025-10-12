@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import com.rudra.sahayam.ui.screens.alerts.AlertsScreen
 import com.rudra.sahayam.ui.screens.auth.LoginScreen
 import com.rudra.sahayam.ui.screens.auth.SignUpScreen
+import com.rudra.sahayam.ui.screens.auth.SplashScreen
 import com.rudra.sahayam.ui.screens.auth.WelcomeScreen
 import com.rudra.sahayam.ui.screens.dashboard.SahayamDashboardScreen
 import com.rudra.sahayam.ui.screens.map.MapScreen
@@ -18,8 +19,9 @@ import com.rudra.sahayam.ui.screens.settings.SettingsScreen
 
 @Composable
 fun NavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
-    NavHost(navController = navController, startDestination = Routes.WELCOME, modifier = modifier) {
+    NavHost(navController = navController, startDestination = Routes.SPLASH, modifier = modifier) {
         // Auth Flow
+        composable(Routes.SPLASH) { SplashScreen(navController) }
         composable(Routes.WELCOME) { WelcomeScreen(navController) }
         composable(Routes.LOGIN) { LoginScreen(navController) }
         composable(Routes.SIGNUP) { SignUpScreen(navController) }
